@@ -20,7 +20,7 @@ int main(void)
 	matrix a(n,n),b(n,n),c(n,n);
 	matrix U[n],F[n],alfa[n],betta[n];
 	fstream fout("2.xls", ios::out);
-
+    fout.precision(2);
 	h1 = 0.5/n;
 
 	for(i=0;i<n;i++)
@@ -75,7 +75,7 @@ b(n-2,n-1)=1./(h1*h1);
 for(i=0;i<n;i++)
 	{
 		for(j=0;j<n;j++)
-			fout<<b(i,j)<<"\t";
+			fout<<b(i,j)<<" ";
 		fout<<endl;
 	}
 
@@ -97,8 +97,7 @@ fout<<endl;
 	for (j=0;j<n;j++)
 		{
 			alfa[1].Null();
-
-				betta[1](j,0)=1;
+			betta[1](j,0)=1;
 
 		}
 
@@ -120,10 +119,12 @@ fout<<endl;
 	{
 		for(j=0;j<n;j++)
 		{
-		fout<<U[i](j,0)<<"\t";
+		fout<<U[i](j,0)<<" ";
 		}
 
 		fout<<endl;
 	}
+
+	fout.close();
 	return(0);
 }
