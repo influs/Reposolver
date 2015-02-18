@@ -10,8 +10,14 @@
 #include<math.h>
 #include<fstream>
 #include"matrix.h"
-#define n 30
+#define n 10
 using namespace std;
+double f(double,double);
+
+double f(double x,double y)
+{
+	return x*x+y*y;
+}
 int main(void)
 {
 
@@ -21,7 +27,7 @@ int main(void)
 	matrix U[n],F[n],alfa[n],betta[n];
 	fstream fout("2.xls", ios::out);
     fout.precision(2);
-	h1 = 0.5/n;
+	h1 = 1./(n-1.);
 
 	for(i=0;i<n;i++)
 		{
@@ -78,15 +84,45 @@ for(i=0;i<n;i++)
 			fout<<b(i,j)<<" ";
 		fout<<endl;
 	}
+//border conditions
+//left,right
+for(j=1;j<n;++j)
+{
+    U[0](j,0) = f(0.,(j)*h1);
+    U[n-1](j,0) = f(1.,(j)*h1);
+}
+//up,down
+for(i=1;i<n;++i)
+{
+	U[i](0,0) = f((i)*h1,0.);
+	U[i](n-1,0) = f((i)*h1,1.);
+}
+cout<<U[0]<<endl;
+cout.precision(2);
+for(i=0;i<n;i++)
+	{
+		for(j=0;j<n;j++)
+		{
+
+		cout<<U[i](j,0)<<"\t";
+		}
+
+		cout<<endl;
+	}
 
 //vektor F[n]
 
 	for(i=0;i<n;i++)
 	{
-		for(j=0;j<n;j++)
+		F[i](0,0)= 4. - U[i](0,0)/h1/h1;
+		F[i](n-1,0)= 4. - U[i](n-1,0)/h1/h1;
+		//init F internal
+
+		for(j=1;j<n-1;++j)
 		{
-				F[i](j,0)=-U[i](j,0)/h1/h1;
+		    F[i](j,0) = 4.;
 		}
+
 
 	}
 
@@ -97,8 +133,7 @@ fout<<endl;
 	for (j=0;j<n;j++)
 		{
 			alfa[1].Null();
-			betta[1](j,0)=1;
-
+			betta[1](j,0)=U[0](j,0);
 		}
 
 	for(i=1;i<n-1;i++)
@@ -109,6 +144,7 @@ fout<<endl;
 			betta[i+1]=!(a*alfa[i]+b)*(F[i]-a*betta[i]);
 			}
 		}
+
 	for(i=n-2;i>=0;i--)
 	{
 			U[i]=alfa[i+1]*U[i+1]+betta[i+1];
